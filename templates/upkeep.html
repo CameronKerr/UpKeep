@@ -1,0 +1,163 @@
+<html>
+<head>
+	<title>Upkeep</title>
+	<link href='https://fonts.googleapis.com/css?family=EB Garamond' rel='stylesheet'>
+    <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run Python Script</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* Adjust the gap size as needed */
+            margin-bottom: 20px; /* Optional: Add margin to the top */
+	    margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+	    margin-bottom: 20px;
+	    margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        /* Set the height and width of the sections to occupy the whole page */
+		html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+			background-color: #f5f5dc;
+        }
+		*{
+   			padding: 0;
+    		margin: 0;
+			font-family: "EB Garamond";
+		}
+        header, footer {
+            height: 150px;
+            width: 100%;
+        }
+		main {
+			width: 100%;
+            border: 5px solid #43302E;
+		}
+        /* Add your custom styles for each section */
+        header {
+            background-color:#F5F5DC;
+        }
+
+        main {
+			background: conic-gradient(from 90deg at 1px 1px,#F5F5DC 90deg,#43302E 0) 0 0/25px 25px;
+			background-color: #F5F5DC;
+			display: flex;
+			padding-left: 3%;
+		}
+
+        footer {
+            background-color: #F5F5DC;
+        }
+		.small-box {
+  			width: 90%;
+			height: 70%;
+            background-color: #F5F5DC;
+            border: 5px solid #43302E;
+            padding: 1%;
+            margin-top: 15px;
+            margin-bottom: 15px
+        }
+		.side-box {
+			width: 20%;
+			height: 70%;
+			background-color: #F5F5DC;
+			border: 5px solid #43302E;
+			margin-left: 30px;
+			padding: 1%; 
+		}
+		img {
+			height: auto;
+			width: 100%;
+			object-fit: contain;
+		}
+		.folder {
+			display: inline-block;
+		}
+	    #loading {
+		display:none;
+		}
+	    #Processing {
+		display:none;
+		}
+    </style>
+</head>
+<body>
+	<main>
+	  <div class = "small-box">
+	  <h2 style="padding-bottom: 15px;font-size: 40px;color: #45a049;">UpKeep</h2>
+	  <script>
+        function runScript() {
+	     var loadingElement = document.getElementById('loading');
+	    loadingElement.style.display = 'block';
+	    
+            fetch('/run-script')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('image-container').innerHTML = '<img src="' + data.image_url + '" alt="Generated Image">';
+		    loadingElement.style.display = 'none';
+		    
+                })
+                .catch(error => console.error('Error:', error));
+	    }
+	function runScriptString() {
+	    var loadingElement = document.getElementById('Processing');
+	    loadingElement.style.display = 'block';
+	    
+            const userInput = prompt('Enter a string:');
+            if (userInput !== null && userInput !== '') {
+                fetch(`/run-script-string?input=${encodeURIComponent(userInput)}`)
+                    .then(response => {response.json();
+			loadingElement.style.display = 'none';
+			})
+                    .then(data => {
+                        document.getElementById('result-container').innerText = data.result;
+			loadingElement.style.display = 'none';
+                    })
+                    .catch(error => console.error('Error:', error));
+		}
+	    }
+	function runScriptRemove() {
+            const userInput = prompt('Enter a string:');
+            if (userInput !== null && userInput !== '') {
+                fetch(`/run-script-remove?input=${encodeURIComponent(userInput)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('result-container').innerText = data.result;
+                    })
+                    .catch(error => console.error('Error:', error));
+		}
+	    }
+	</script>
+	<div class="container">
+	    <button onclick="runScript()">Get question</button>
+	    <div id="loading">Loading...</div>
+	    <div id="image-container"></div>
+	    <button onclick="runScriptString()">Add textbook</button>
+	    <div id="Processing">Processing...</div>
+	    <div id="result-container"></div>
+	    <button onclick="runScriptRemove()">Remove textbook</button>
+	    <div id="result-container"></div>
+	</div>
+	</div>
+    </main>
+</body>
+</html>
